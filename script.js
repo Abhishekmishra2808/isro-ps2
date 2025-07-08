@@ -21,6 +21,35 @@ function sendSuggestion(message) {
     sendMessage(message);
 }
 
+// Gemini API integration
+async function getGeminiResponse(userMessage) {
+    const apiKey = 'AIzaSyCl9nPK-mUNIHKwLv1wLr1KJe0BcFNg_tA';
+    const url = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-pro:generateContent';
+    const body = {
+        contents: [
+            { parts: [{ text: userMessage }] }
+        ]
+    };
+    try {
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'x-goog-api-key': apiKey
+            },
+            body: JSON.stringify(body)
+        });
+        const data = await response.json();
+        if (!response.ok) {
+            // Show the error message from the API
+            return 'Error contacting Gemini API: ' + (data.error?.message || response.status);
+        }
+        return data.candidates?.[0]?.content?.parts?.[0]?.text || 'Sorry, I could not generate a response.';
+    } catch (error) {
+        return 'Error contacting Gemini API: ' + error.message;
+    }
+}
+
 function sendMessage(predefinedMessage = null) {
     const message = predefinedMessage || messageInput.value.trim();
     
@@ -42,12 +71,11 @@ function sendMessage(predefinedMessage = null) {
     // Show typing indicator
     showTypingIndicator();
     
-    // Simulate bot response
-    setTimeout(() => {
+    // Use Gemini for bot response
+    getGeminiResponse(message).then((response) => {
         hideTypingIndicator();
-        const response = getMOSDACResponse(message);
         addMessage(response, 'assistant');
-    }, 1500);
+    });
 }
 
 function addMessage(content, sender) {
@@ -104,28 +132,6 @@ function hideTypingIndicator() {
     const typingIndicator = document.getElementById('typingIndicator');
     if (typingIndicator) {
         typingIndicator.remove();
-    }
-}
-
-function getMOSDACResponse(message) {
-    const lowerMessage = message.toLowerCase();
-    
-    if (lowerMessage.includes('weather') || lowerMessage.includes('satellite')) {
-        return 'MOSDAC provides comprehensive weather satellite data including INSAT-3D, INSAT-3DR, and other meteorological satellites. I can help you access real-time weather imagery, temperature profiles, and atmospheric data. What specific weather information are you looking for?';
-    } else if (lowerMessage.includes('cyclone') || lowerMessage.includes('storm')) {
-        return 'I can provide cyclone tracking data from our satellite monitoring systems. MOSDAC tracks tropical cyclones using multi-spectral imagery and provides real-time updates on storm intensity, path, and meteorological parameters. Would you like current cyclone status or historical data?';
-    } else if (lowerMessage.includes('ocean') || lowerMessage.includes('sea')) {
-        return 'MOSDAC offers extensive ocean data including sea surface temperature, chlorophyll concentration, and ocean color products from satellites like Oceansat-2 and INSAT series. I can help you analyze ocean currents, temperature anomalies, and marine ecosystem parameters.';
-    } else if (lowerMessage.includes('rainfall') || lowerMessage.includes('monsoon')) {
-        return 'Our rainfall estimation products use satellite data to provide quantitative precipitation estimates. I can help you access monsoon tracking data, rainfall distribution maps, and precipitation forecasts from our meteorological satellite constellation.';
-    } else if (lowerMessage.includes('temperature') || lowerMessage.includes('climate')) {
-        return 'MOSDAC provides temperature data products including atmospheric temperature profiles, land surface temperature, and sea surface temperature from various satellite sensors. I can help you analyze temperature trends, anomalies, and climate indicators.';
-    } else if (lowerMessage.includes('data') || lowerMessage.includes('download')) {
-        return 'MOSDAC offers various data products for download including Level-1, Level-2, and Level-3 products. You can access data through our web portal, FTP services, or API endpoints. I can guide you through the data access procedures and help you find the specific datasets you need.';
-    } else if (lowerMessage.includes('insat') || lowerMessage.includes('satellite')) {
-        return 'INSAT series satellites provide crucial meteorological data for weather monitoring and forecasting. INSAT-3D and INSAT-3DR offer high-resolution imagery and atmospheric sounding data. I can help you understand the different satellite products and their applications.';
-    } else {
-        return 'I\'m MOSDAC Assistant, specialized in meteorological and oceanographic satellite data. I can help you with weather analysis, cyclone tracking, ocean data, rainfall estimates, and climate monitoring. What would you like to explore from our satellite data archive?';
     }
 }
 
