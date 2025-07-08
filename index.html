@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MOSDAC Assistant</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <button class="new-chat-btn" onclick="startNewChat()">
+                    <span>+</span>
+                    New chat
+                </button>
+            </div>
+            <div class="sidebar-menu">
+                <div class="menu-section">
+                    <div class="menu-item">
+                        <span>🔍</span>
+                        Search chats
+                    </div>
+                    <div class="menu-item">
+                        <span>📚</span>
+                        Library
+                    </div>
+                    <div class="menu-item">
+                        <span>🌟</span>
+                        Sora
+                    </div>
+                    <div class="menu-item">
+                        <span>🤖</span>
+                        GPTs
+                    </div>
+                </div>
+                <div class="chats-section">
+                    <div class="chats-header">Chats</div>
+                    <div class="chat-item active">MOSDAC Weather Analysis</div>
+                    <div class="chat-item">Satellite Data Interpretation</div>
+                    <div class="chat-item">Ocean Current Patterns</div>
+                    <div class="chat-item">Cyclone Tracking System</div>
+                    <div class="chat-item">Rainfall Prediction Model</div>
+                    <div class="chat-item">Atmospheric Data Query</div>
+                    <div class="chat-item">Climate Change Indicators</div>
+                    <div class="chat-item">INSAT Data Processing</div>
+                    <div class="chat-item">Monsoon Forecasting</div>
+                    <div class="chat-item">Temperature Anomaly Study</div>
+                </div>
+            </div>
+        </div>
+        <!-- Main Content -->
+        <div class="main-content">
+            <div class="main-header">
+                <div class="header-title">
+                    <span>🛰️</span>
+                    MOSDAC Assistant
+                </div>
+                <div class="header-actions">
+                    <button class="header-btn">Get Plus</button>
+                </div>
+            </div>
+            <div class="chat-container" id="chatContainer">
+                <div class="welcome-screen" id="welcomeScreen">
+                    <h1 class="welcome-title">Where should we begin?</h1>
+                    <div class="suggestion-cards">
+                        <div class="suggestion-card" onclick="sendSuggestion('Latest weather satellite data')">
+                            <div class="suggestion-title">Weather Analysis</div>
+                            <div class="suggestion-desc">Get latest weather satellite data and analysis</div>
+                        </div>
+                        <div class="suggestion-card" onclick="sendSuggestion('Cyclone tracking information')">
+                            <div class="suggestion-title">Cyclone Tracking</div>
+                            <div class="suggestion-desc">Track current cyclones and weather systems</div>
+                        </div>
+                        <div class="suggestion-card" onclick="sendSuggestion('Ocean temperature patterns')">
+                            <div class="suggestion-title">Ocean Data</div>
+                            <div class="suggestion-desc">Analyze ocean temperature and current patterns</div>
+                        </div>
+                        <div class="suggestion-card" onclick="sendSuggestion('Rainfall prediction models')">
+                            <div class="suggestion-title">Rainfall Forecast</div>
+                            <div class="suggestion-desc">Access rainfall prediction and monsoon data</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="input-area">
+                <div class="input-wrapper">
+                    <div class="input-container">
+                        <textarea 
+                            class="message-input" 
+                            id="messageInput"
+                            placeholder="Ask anything about weather, climate, or satellite data..."
+                            rows="1"
+                            onkeypress="handleKeyPress(event)"
+                            oninput="adjustTextareaHeight()"
+                        ></textarea>
+                        <div class="input-actions">
+                            <button class="input-btn" title="Tools">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                                </svg>
+                            </button>
+                            <button class="send-btn" id="sendBtn" onclick="sendMessage()">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
