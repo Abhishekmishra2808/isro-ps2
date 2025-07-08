@@ -3,112 +3,1083 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MOSDAC Assistant</title>
-    <link rel="stylesheet" href="style.css">
+    <title>MOSDAC AI Assistant - ISRO Hackathon</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%);
+            color: white;
+            overflow-x: hidden;
+        }
+
+        /* Animated background stars */
+        .stars {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .star {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: white;
+            border-radius: 50%;
+            animation: twinkle 3s infinite;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 1; }
+        }
+
+        /* Header */
+        header {
+            position: relative;
+            z-index: 10;
+            padding: 20px 0;
+            background: rgba(26, 26, 46, 0.9);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        nav {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            animation: rotate 10s linear infinite;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .logo-text {
+            font-size: 24px;
+            font-weight: bold;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        /* Hero Section */
+        .hero {
+            position: relative;
+            z-index: 10;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 0 20px;
+        }
+
+        .hero-content {
+            max-width: 800px;
+            animation: fadeInUp 1s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: textGlow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes textGlow {
+            from { filter: drop-shadow(0 0 20px rgba(255, 107, 107, 0.5)); }
+            to { filter: drop-shadow(0 0 30px rgba(78, 205, 196, 0.8)); }
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+            margin-bottom: 30px;
+            opacity: 0.9;
+            line-height: 1.6;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 15px 40px;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-button.secondary {
+            background: linear-gradient(45deg, #4ecdc4, #45b7d1);
+        }
+
+        .cta-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .cta-button:hover::before {
+            left: 100%;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(255, 107, 107, 0.4);
+        }
+
+        .cta-button.secondary:hover {
+            box-shadow: 0 10px 30px rgba(78, 205, 196, 0.4);
+        }
+
+        /* Chatbot Demo Section */
+        .chatbot-demo {
+            position: relative;
+            z-index: 10;
+            padding: 100px 20px;
+            background: linear-gradient(135deg, rgba(22, 33, 62, 0.8), rgba(26, 26, 46, 0.8));
+            backdrop-filter: blur(10px);
+        }
+
+        .chatbot-container {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 50px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .chatbot-interface {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            overflow: hidden;
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .chatbot-header {
+            background: linear-gradient(45deg, rgba(255, 107, 107, 0.2), rgba(78, 205, 196, 0.2));
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .chatbot-status {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: bold;
+        }
+
+        .status-indicator {
+            width: 12px;
+            height: 12px;
+            background: #4ecdc4;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .chatbot-controls {
+            display: flex;
+            gap: 10px;
+        }
+
+        .control-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            padding: 8px 12px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+
+        .control-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: scale(1.1);
+        }
+
+        .chatbot-messages {
+            height: 400px;
+            overflow-y: auto;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .message {
+            display: flex;
+            gap: 15px;
+            animation: messageSlide 0.5s ease-out;
+        }
+
+        @keyframes messageSlide {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .user-message {
+            flex-direction: row-reverse;
+        }
+
+        .message-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+
+        .message-content {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px 20px;
+            border-radius: 20px;
+            max-width: 70%;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .user-message .message-content {
+            background: linear-gradient(45deg, rgba(255, 107, 107, 0.2), rgba(78, 205, 196, 0.2));
+        }
+
+        .message-content ul {
+            margin: 10px 0;
+            padding-left: 20px;
+        }
+
+        .message-content li {
+            margin: 5px 0;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .data-preview {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 15px;
+            border-radius: 10px;
+            margin: 10px 0;
+            border-left: 4px solid #4ecdc4;
+        }
+
+        .data-item {
+            padding: 5px 0;
+            color: #4ecdc4;
+            font-family: monospace;
+        }
+
+        .typing-indicator {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .typing-dots {
+            display: flex;
+            gap: 5px;
+            padding: 15px 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+        }
+
+        .typing-dots span {
+            width: 8px;
+            height: 8px;
+            background: #4ecdc4;
+            border-radius: 50%;
+            animation: typing 1.5s infinite;
+        }
+
+        .typing-dots span:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .typing-dots span:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes typing {
+            0%, 60%, 100% { opacity: 0.3; }
+            30% { opacity: 1; }
+        }
+
+        .chatbot-input {
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.2);
+            display: flex;
+            gap: 15px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .chatbot-input input {
+            flex: 1;
+            padding: 15px 20px;
+            border: none;
+            border-radius: 25px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 16px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .chatbot-input input::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .chatbot-input input:focus {
+            outline: none;
+            border-color: #4ecdc4;
+            box-shadow: 0 0 20px rgba(78, 205, 196, 0.3);
+        }
+
+        .send-btn {
+            padding: 15px 20px;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .send-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(255, 107, 107, 0.4);
+        }
+
+        .chatbot-info {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 40px;
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            height: fit-content;
+        }
+
+        .chatbot-info h3 {
+            color: #4ecdc4;
+            margin-bottom: 30px;
+            font-size: 1.5rem;
+        }
+
+        .capability-list {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+
+        .capability-item {
+            display: flex;
+            gap: 15px;
+            align-items: flex-start;
+        }
+
+        .capability-icon {
+            font-size: 24px;
+            min-width: 40px;
+        }
+
+        .capability-text h4 {
+            color: white;
+            margin-bottom: 5px;
+            font-size: 1.1rem;
+        }
+
+        .capability-text p {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+        .features {
+            position: relative;
+            z-index: 10;
+            padding: 100px 20px;
+            background: rgba(26, 26, 46, 0.5);
+            backdrop-filter: blur(10px);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 60px;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+        }
+
+        .feature-card {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 40px;
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255, 107, 107, 0.1), transparent);
+            transform: rotate(45deg);
+            transition: all 0.5s ease;
+            opacity: 0;
+        }
+
+        .feature-card:hover::before {
+            opacity: 1;
+            transform: rotate(45deg) translate(50%, 50%);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .feature-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: #4ecdc4;
+        }
+
+        .feature-card p {
+            opacity: 0.9;
+            line-height: 1.6;
+        }
+
+        /* Tech Stack */
+        .tech-stack {
+            position: relative;
+            z-index: 10;
+            padding: 100px 20px;
+            background: rgba(22, 33, 62, 0.5);
+        }
+
+        .tech-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 30px;
+            margin-top: 50px;
+        }
+
+        .tech-item {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .tech-item:hover {
+            transform: scale(1.05);
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .tech-icon {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Footer */
+        footer {
+            position: relative;
+            z-index: 10;
+            padding: 50px 20px;
+            background: rgba(10, 10, 10, 0.9);
+            text-align: center;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .social-links a {
+            color: white;
+            font-size: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .social-links a:hover {
+            color: #4ecdc4;
+            transform: translateY(-3px);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .nav-links {
+                display: none;
+            }
+            
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .chatbot-container {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+
+            .hero-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .cta-button {
+                width: 200px;
+                text-align: center;
+            }
+        }
+
+        /* Floating elements */
+        .floating-element {
+            position: absolute;
+            border-radius: 50%;
+            background: linear-gradient(45deg, rgba(255, 107, 107, 0.1), rgba(78, 205, 196, 0.1));
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .floating-1 {
+            top: 20%;
+            left: 10%;
+            width: 80px;
+            height: 80px;
+            animation-delay: 0s;
+        }
+
+        .floating-2 {
+            top: 60%;
+            right: 10%;
+            width: 120px;
+            height: 120px;
+            animation-delay: 2s;
+        }
+
+        .floating-3 {
+            bottom: 20%;
+            left: 15%;
+            width: 60px;
+            height: 60px;
+            animation-delay: 4s;
+        }
+    </style>
 </head>
 <body>
-    <div class="app-container">
-        <!-- Sidebar -->
-        <div class="sidebar">
-            <div class="sidebar-header">
-                <button class="new-chat-btn" onclick="startNewChat()">
-                    <span>+</span>
-                    New chat
-                </button>
+    <!-- Animated Stars Background -->
+    <div class="stars"></div>
+    
+    <!-- Floating Elements -->
+    <div class="floating-element floating-1"></div>
+    <div class="floating-element floating-2"></div>
+    <div class="floating-element floating-3"></div>
+
+    <!-- Header -->
+    <header>
+        <nav>
+            <div class="logo">
+                <div class="logo-icon">🛰️</div>
+                <div class="logo-text">MOSDAC AI</div>
             </div>
-            <div class="sidebar-menu">
-                <div class="menu-section">
-                    <div class="menu-item">
-                        <span>🔍</span>
-                        Search chats
+            <ul class="nav-links">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#features">Features</a></li>
+                <li><a href="#tech">Technology</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="hero-content">
+            <h1>MOSDAC AI Assistant</h1>
+            <p>Revolutionary chatbot powered by ISRO's Meteorological & Oceanographic Satellite Data Archive Centre. Get real-time satellite data, weather information, and oceanographic insights through intelligent conversations.</p>
+            <div class="hero-buttons">
+                <a href="#features" class="cta-button">Explore Features</a>
+                <a href="chatbot.html" class="cta-button secondary">Try Chatbot</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Chatbot Demo Section -->
+    <section class="chatbot-demo" id="chatbot">
+        <div class="container">
+            <h2 class="section-title">Experience MOSDAC AI</h2>
+            <div class="chatbot-container">
+                <div class="chatbot-interface">
+                    <div class="chatbot-header">
+                        <div class="chatbot-status">
+                            <div class="status-indicator"></div>
+                            <span>MOSDAC AI Assistant</span>
+                        </div>
+                        <div class="chatbot-controls">
+                            <button class="control-btn">⚙️</button>
+                            <button class="control-btn">📊</button>
+                            <button class="control-btn">🔍</button>
+                        </div>
                     </div>
-                    <div class="menu-item">
-                        <span>📚</span>
-                        Library
+                    <div class="chatbot-messages">
+                        <div class="message bot-message">
+                            <div class="message-avatar">🤖</div>
+                            <div class="message-content">
+                                <p>Hello! I'm your MOSDAC AI Assistant. I can help you with:</p>
+                                <ul>
+                                    <li>🛰️ Real-time satellite data</li>
+                                    <li>🌊 Oceanographic information</li>
+                                    <li>☁️ Weather patterns</li>
+                                    <li>📈 Data visualization</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="message user-message">
+                            <div class="message-content">
+                                <p>Show me current weather patterns over the Indian Ocean</p>
+                            </div>
+                            <div class="message-avatar">👤</div>
+                        </div>
+                        <div class="message bot-message">
+                            <div class="message-avatar">🤖</div>
+                            <div class="message-content">
+                                <p>🌊 Analyzing current satellite data from INSAT-3DR...</p>
+                                <div class="data-preview">
+                                    <div class="data-item">Sea Surface Temperature: 28.5°C</div>
+                                    <div class="data-item">Wave Height: 2.3m</div>
+                                    <div class="data-item">Wind Speed: 15 km/h</div>
+                                </div>
+                                <p>📊 Would you like me to generate a detailed visualization?</p>
+                            </div>
+                        </div>
+                        <div class="typing-indicator">
+                            <div class="message-avatar">🤖</div>
+                            <div class="typing-dots">
+                                <span></span>
+                                <span></span>
+                                <span></span>
+                            </div>
+                        </div>
                     </div>
-                   
-                    
+                    <div class="chatbot-input">
+                        <input type="text" placeholder="Ask about satellite data, weather, or ocean conditions..." />
+                        <button class="send-btn">🚀</button>
+                    </div>
                 </div>
-                <div class="chats-section">
-                    <div class="chats-header">Chats</div>
-                    <div class="chat-item active">MOSDAC Weather Analysis</div>
-                    <div class="chat-item">Satellite Data Interpretation</div>
-                    <div class="chat-item">Ocean Current Patterns</div>
-                    <div class="chat-item">Cyclone Tracking System</div>
-                    <div class="chat-item">Rainfall Prediction Model</div>
-                    <div class="chat-item">Atmospheric Data Query</div>
-                    <div class="chat-item">Climate Change Indicators</div>
-                    <div class="chat-item">INSAT Data Processing</div>
-                    <div class="chat-item">Monsoon Forecasting</div>
-                    <div class="chat-item">Temperature Anomaly Study</div>
+                <div class="chatbot-info">
+                    <h3>🎯 Key Capabilities</h3>
+                    <div class="capability-list">
+                        <div class="capability-item">
+                            <div class="capability-icon">🌍</div>
+                            <div class="capability-text">
+                                <h4>Global Coverage</h4>
+                                <p>Access worldwide satellite imagery and data</p>
+                            </div>
+                        </div>
+                        <div class="capability-item">
+                            <div class="capability-icon">⚡</div>
+                            <div class="capability-text">
+                                <h4>Real-time Processing</h4>
+                                <p>Get instant responses with live data</p>
+                            </div>
+                        </div>
+                        <div class="capability-item">
+                            <div class="capability-icon">🔍</div>
+                            <div class="capability-text">
+                                <h4>Smart Analysis</h4>
+                                <p>AI-powered insights and recommendations</p>
+                            </div>
+                        </div>
+                        <div class="capability-item">
+                            <div class="capability-icon">📊</div>
+                            <div class="capability-text">
+                                <h4>Data Visualization</h4>
+                                <p>Interactive charts and satellite maps</p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-        <!-- Main Content -->
-        <div class="main-content">
-            <div class="main-header">
-                <div class="header-title">
-                    <span>🛰️</span>
-                    MOSDAC Assistant
+    </section>
+    <section class="features" id="features">
+        <div class="container">
+            <h2 class="section-title">Intelligent Features</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🌍</div>
+                    <h3>Real-time Satellite Data</h3>
+                    <p>Access live satellite imagery, weather patterns, and environmental data from ISRO's comprehensive database with instant query processing.</p>
                 </div>
-                <div class="header-actions">
-                    <button class="header-btn">Login</button>
+                <div class="feature-card">
+                    <div class="feature-icon">🌊</div>
+                    <h3>Oceanographic Insights</h3>
+                    <p>Get detailed ocean temperature, wave height, and marine weather information through natural language conversations.</p>
                 </div>
-            </div>
-            <div class="chat-container" id="chatContainer">
-                <div class="welcome-screen" id="welcomeScreen">
-                    <h1 class="welcome-title">Where should we begin?</h1>
-                    <div class="suggestion-cards">
-                        <div class="suggestion-card" onclick="sendSuggestion('Latest weather satellite data')">
-                            <div class="suggestion-title">Weather Analysis</div>
-                            <div class="suggestion-desc">Get latest weather satellite data and analysis</div>
-                        </div>
-                        <div class="suggestion-card" onclick="sendSuggestion('Cyclone tracking information')">
-                            <div class="suggestion-title">Cyclone Tracking</div>
-                            <div class="suggestion-desc">Track current cyclones and weather systems</div>
-                        </div>
-                        <div class="suggestion-card" onclick="sendSuggestion('Ocean temperature patterns')">
-                            <div class="suggestion-title">Ocean Data</div>
-                            <div class="suggestion-desc">Analyze ocean temperature and current patterns</div>
-                        </div>
-                        <div class="suggestion-card" onclick="sendSuggestion('Rainfall prediction models')">
-                            <div class="suggestion-title">Rainfall Forecast</div>
-                            <div class="suggestion-desc">Access rainfall prediction and monsoon data</div>
-                        </div>
-                    </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🤖</div>
+                    <h3>AI-Powered Chat</h3>
+                    <p>Advanced natural language processing to understand complex queries and provide accurate, contextual responses about satellite data.</p>
                 </div>
-            </div>
-            <div class="input-area">
-                <div class="input-wrapper">
-                    <div class="input-container">
-                        <textarea 
-                            class="message-input" 
-                            id="messageInput"
-                            placeholder="Ask anything about weather, climate, or satellite data... (Powered by Gemini)"
-                            rows="1"
-                            onkeypress="handleKeyPress(event)"
-                            oninput="adjustTextareaHeight()"
-                        ></textarea>
-                        <div class="input-actions">
-                            <button class="input-btn" title="Tools">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
-                                </svg>
-                            </button>
-                            <button class="send-btn" id="sendBtn" onclick="sendMessage()">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                                    <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
-                                </svg>
-                            </button>
-                        </div>
-                    </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📊</div>
+                    <h3>Data Visualization</h3>
+                    <p>Interactive charts, graphs, and maps to visualize satellite data trends and patterns for better understanding.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">⚡</div>
+                    <h3>Lightning Fast</h3>
+                    <p>Optimized backend integration with MOSDAC dynamic data scraping ensures rapid data retrieval and processing for seamless user experience.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🔒</div>
+                    <h3>Secure & Reliable</h3>
+                    <p>Built with enterprise-grade security protocols and reliable data handling to ensure accurate and trustworthy information.</p>
                 </div>
             </div>
         </div>
-    </div>
-    <footer style="width:100%;text-align:center;padding:16px 0;background:#b64848;color:#b4b4b4;font-size:14px;letter-spacing:1px;">
-        Powered by Gemini
+    </section>
+
+    <!-- Technology Stack -->
+    <section class="tech-stack" id="tech">
+        <div class="container">
+            <h2 class="section-title">Technology Stack</h2>
+            <div class="tech-grid">
+                <div class="tech-item">
+                    <div class="tech-icon">🚀</div>
+                    <h3>Supervised Fine-Tuning (SFT)</h3>
+                </div>
+                <div class="tech-item">
+                    <div class="tech-icon">🧠</div>
+                    <h3>Machine Learning</h3>
+                </div>
+                <div class="tech-item">
+                    <div class="tech-icon">💬</div>
+                    <h3>NLP Processing</h3>
+                </div>
+                <div class="tech-item">
+                    <div class="tech-icon">🌐</div>
+                    <h3>Web Technologies</h3>
+                </div>
+                <div class="tech-item">
+                    <div class="tech-icon">📱</div>
+                    <h3>Responsive Design</h3>
+                </div>
+                <div class="tech-item">
+                    <div class="tech-icon">☁️</div>
+                    <h3>Cloud Integration</h3>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer id="contact">
+        <div class="footer-content">
+            <div class="social-links">
+                <a href="#">🌐</a>
+                <a href="#">📧</a>
+                <a href="#">📱</a>
+            </div>
+            <p>&copy; 2025 MOSDAC AI Assistant - ISRO Hackathon Project</p>
+            <p>Built with passion for space technology and innovation</p>
+        </div>
     </footer>
-    <script src="script.js"></script>
+
+    <script>
+        // Create animated stars
+        function createStars() {
+            const starsContainer = document.querySelector('.stars');
+            const numStars = 50;
+            
+            for (let i = 0; i < numStars; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                star.style.left = Math.random() * 100 + '%';
+                star.style.top = Math.random() * 100 + '%';
+                star.style.animationDelay = Math.random() * 3 + 's';
+                starsContainer.appendChild(star);
+            }
+        }
+
+        // Enhanced smooth scrolling with offset for fixed header
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    const headerOffset = 100;
+                    const elementPosition = target.getBoundingClientRect().top;
+                    const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+
+                    window.scrollTo({
+                        top: offsetPosition,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+
+        // Chatbot interaction simulation
+        const chatInput = document.querySelector('.chatbot-input input');
+        const sendBtn = document.querySelector('.send-btn');
+        const messagesContainer = document.querySelector('.chatbot-messages');
+
+        function addMessage(content, isUser = false) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${isUser ? 'user-message' : 'bot-message'}`;
+            
+            const avatar = document.createElement('div');
+            avatar.className = 'message-avatar';
+            avatar.textContent = isUser ? '👤' : '🤖';
+            
+            const messageContent = document.createElement('div');
+            messageContent.className = 'message-content';
+            messageContent.innerHTML = `<p>${content}</p>`;
+            
+            if (isUser) {
+                messageDiv.appendChild(messageContent);
+                messageDiv.appendChild(avatar);
+            } else {
+                messageDiv.appendChild(avatar);
+                messageDiv.appendChild(messageContent);
+            }
+            
+            messagesContainer.appendChild(messageDiv);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+
+        function simulateTyping() {
+            const typingIndicator = document.querySelector('.typing-indicator');
+            typingIndicator.style.display = 'flex';
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            
+            setTimeout(() => {
+                typingIndicator.style.display = 'none';
+            }, 2000);
+        }
+
+        sendBtn.addEventListener('click', () => {
+            const message = chatInput.value.trim();
+            if (message) {
+                addMessage(message, true);
+                chatInput.value = '';
+                
+                simulateTyping();
+                
+                setTimeout(() => {
+                    const responses = [
+                        "📡 Retrieving satellite data from ISRO's MOSDAC database...",
+                        "🌊 Current ocean temperature: 26.8°C. Wave height: 1.8m. Generating visualization...",
+                        "☁️ Weather analysis complete. Monsoon patterns detected over Bay of Bengal.",
+                        "📊 Data processed successfully! Would you like me to create a detailed report?"
+                    ];
+                    const randomResponse = responses[Math.floor(Math.random() * responses.length)];
+                    addMessage(randomResponse);
+                }, 2500);
+            }
+        });
+
+        chatInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                sendBtn.click();
+            }
+        });
+
+        // Auto-scroll typing indicator
+        setInterval(() => {
+            const typingIndicator = document.querySelector('.typing-indicator');
+            if (typingIndicator.style.display === 'flex') {
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            }
+        }, 100);
+
+        // Intersection Observer for animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.animation = 'fadeInUp 0.6s ease-out forwards';
+                }
+            });
+        }, observerOptions);
+
+        // Observe feature cards
+        document.querySelectorAll('.feature-card').forEach(card => {
+            observer.observe(card);
+        });
+
+        // Initialize
+        createStars();
+
+        // Parallax effect for floating elements
+        window.addEventListener('scroll', () => {
+            const scrolled = window.pageYOffset;
+            const parallaxElements = document.querySelectorAll('.floating-element');
+            
+            parallaxElements.forEach((element, index) => {
+                const speed = 0.5 + (index * 0.1);
+                element.style.transform = `translateY(${scrolled * speed}px)`;
+            });
+        });
+    </script>
 </body>
 </html>
